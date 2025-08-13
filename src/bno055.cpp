@@ -12,6 +12,7 @@ using namespace std::chrono_literals;
 
 
 
+
 class Bno055Node : public rclcpp::Node {
 public:
 	Bno055Node(const rclcpp::NodeOptions &options = rclcpp::NodeOptions()) : Node("bno055", options) {
@@ -49,7 +50,7 @@ public:
 		std::vector<double> v;
 		get_parameter("variance_orientation", v); for (size_t i=0; i<3 && i<v.size(); ++i) param_.variance_orientation.value[i]=v[i];
 		get_parameter("variance_acc", v); for (size_t i=0; i<3 && i<v.size(); ++i) param_.variance_acc.value[i]=v[i];
-		get_parameter("variance_angular_vel", v); for (size_t i=0 && i<v.size(); ++i) param_.variance_angular_vel.value[i]=v[i];
+		get_parameter("variance_angular_vel", v); for (size_t i=0; i<3 && i<v.size(); ++i) param_.variance_angular_vel.value[i]=v[i];
 		get_parameter("variance_mag", v); for (size_t i=0; i<3 && i<v.size(); ++i) param_.variance_mag.value[i]=v[i];
 		get_parameter("acc_factor", param_.acc_factor.value);
 		get_parameter("gyr_factor", param_.gyr_factor.value);
@@ -69,10 +70,16 @@ public:
 		get_parameter("publish_raw_imu", publish_raw_imu);
 		get_parameter("data_query_frequency", data_query_frequency_);
 		get_parameter("calib_status_frequency", calib_status_frequency_);
+		// Do not call shared_from_this() here
+		i2c_bus_ = i2c_bus;
+		i2c_addr_ = i2c_addr;
+		publish_raw_imu_ = publish_raw_imu;
+	}
 
-		connector_ = std::make_shared<I2C>(shared_from_this(), i2c_bus, static_cast<uint8_t>(i2c_addr));
+	void init(const std::shared_ptr<Bno055Node>& self) {
+		connector_ = std::make_shared<I2C>(self, i2c_bus_, static_cast<uint8_t>(i2c_addr_));
 		connector_->connect();
-		sensor_ = std::make_shared<SensorService>(shared_from_this(), connector_, param_, publish_raw_imu);
+		sensor_ = std::make_shared<SensorService>(self, connector_, param_, publish_raw_imu_);
 		sensor_->configure();
 	}
 
@@ -81,12 +88,18 @@ public:
 	std::shared_ptr<I2C> connector_;
 	double data_query_frequency_ = 100.0;
 	double calib_status_frequency_ = 0.1;
+private:
+	int i2c_bus_ = 1;
+	int i2c_addr_ = 0x28;
+	bool publish_raw_imu_ = false;
 };
+
 
 
 int main(int argc, char *argv[]) {
 	rclcpp::init(argc, argv);
 	auto node = std::make_shared<Bno055Node>();
+	node->init(node);
 	std::mutex lock;
 
 	auto read_data = [&]() {

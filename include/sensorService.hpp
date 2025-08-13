@@ -88,19 +88,3 @@ private:
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_calib_status_;
   rclcpp::Service<example_interfaces::srv::Trigger>::SharedPtr srv_;
 };
-
-
-private:
-  std::shared_ptr<rclcpp::Node> node_;
-  std::shared_ptr<Connector> con_;
-  NodeParameters param_;
-
-  rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_imu_raw_;
-  rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_imu_;
-  rclcpp::Publisher<sensor_msgs::msg::MagneticField>::SharedPtr pub_mag_;
-  rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr pub_grav_;
-  rclcpp::Publisher<sensor_msgs::msg::Temperature>::SharedPtr pub_temp_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_calib_status_;
-
-  rclcpp::Service<example_interfaces::srv::Trigger>::SharedPtr srv_;
-};

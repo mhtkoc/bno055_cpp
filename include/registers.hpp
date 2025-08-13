@@ -239,11 +239,12 @@ constexpr uint8_t COM_START_BYTE_ERROR_RESP = 0xEE;
 constexpr uint8_t COM_READ = 0x01;
 constexpr uint8_t COM_WRITE = 0x00;
 
+
 // Default calibration values (taken from desk test approximation.) [x y z]
 // Signed hex 16 bit representation
-constexpr std::array<int16_t, 3> DEFAULT_OFFSET_ACC = {0xFFEC, 0x00A5, 0xFFE8};
-constexpr std::array<int16_t, 3> DEFAULT_OFFSET_MAG = {0xFFB4, 0xFE9E, 0x027D};
-constexpr std::array<int16_t, 3> DEFAULT_OFFSET_GYR = {0x0002, 0xFFFF, 0xFFFF};
+constexpr std::array<int16_t, 3> DEFAULT_OFFSET_ACC = {static_cast<int16_t>(0xFFEC), static_cast<int16_t>(0x00A5), static_cast<int16_t>(0xFFE8)};
+constexpr std::array<int16_t, 3> DEFAULT_OFFSET_MAG = {static_cast<int16_t>(0xFFB4), static_cast<int16_t>(0xFE9E), static_cast<int16_t>(0x027D)};
+constexpr std::array<int16_t, 3> DEFAULT_OFFSET_GYR = {static_cast<int16_t>(0x0002), static_cast<int16_t>(0xFFFF), static_cast<int16_t>(0xFFFF)};
 
 constexpr uint16_t DEFAULT_RADIUS_MAG = 0x0;
 constexpr uint16_t DEFAULT_RADIUS_ACC = 0x3E8;

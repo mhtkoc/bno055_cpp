@@ -103,7 +103,7 @@ void SensorService::get_sensor_data() {
         return;
     }
 
-    imu_raw_msg.header.stamp = node_->get_clock()->now().to_msg();
+    imu_raw_msg.header.stamp = node_->get_clock()->now();
     imu_raw_msg.header.frame_id = param_.frame_id.value;
     imu_raw_msg.orientation_covariance[0] = param_.variance_orientation.value[0];
     imu_raw_msg.orientation_covariance[4] = param_.variance_orientation.value[1];
@@ -124,7 +124,7 @@ void SensorService::get_sensor_data() {
         pub_imu_raw_->publish(imu_raw_msg);
     }
 
-    imu_msg.header.stamp = node_->get_clock()->now().to_msg();
+    imu_msg.header.stamp = node_->get_clock()->now();
     imu_msg.header.frame_id = param_.frame_id.value;
     double qw = unpackBytesToFloat(buf[24], buf[25]);
     double qx = unpackBytesToFloat(buf[26], buf[27]);
@@ -148,7 +148,7 @@ void SensorService::get_sensor_data() {
     imu_msg.angular_velocity_covariance = imu_raw_msg.angular_velocity_covariance;
     pub_imu_->publish(imu_msg);
 
-    mag_msg.header.stamp = node_->get_clock()->now().to_msg();
+    mag_msg.header.stamp = node_->get_clock()->now();
     mag_msg.header.frame_id = param_.frame_id.value;
     mag_msg.magnetic_field.x = unpackBytesToFloat(buf[6], buf[7]) / param_.mag_factor.value;
     mag_msg.magnetic_field.y = unpackBytesToFloat(buf[8], buf[9]) / param_.mag_factor.value;
@@ -163,7 +163,7 @@ void SensorService::get_sensor_data() {
     grav_msg.z = unpackBytesToFloat(buf[42], buf[43]) / param_.grav_factor.value;
     pub_grav_->publish(grav_msg);
 
-    temp_msg.header.stamp = node_->get_clock()->now().to_msg();
+    temp_msg.header.stamp = node_->get_clock()->now();
     temp_msg.header.frame_id = param_.frame_id.value;
     temp_msg.temperature = static_cast<double>(buf[44]);
     pub_temp_->publish(temp_msg);

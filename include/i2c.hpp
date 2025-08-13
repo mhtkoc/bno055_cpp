@@ -15,11 +15,8 @@ namespace rclcpp {
     class Node;
 }
 
-// Exception for transmission errors
-class TransmissionException : public std::runtime_error {
-public:
-    explicit TransmissionException(const std::string& msg) : std::runtime_error(msg) {}
-};
+
+#include "exceptions.hpp"
 
 // Abstract base class for connectors
 class Connector {
