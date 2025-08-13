@@ -1,24 +1,40 @@
 cmake_minimum_required(VERSION 3.8)
-project(bno055_cpp)
+
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
-find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
-add_executable(bno055 src/bno055.cpp)
+# Find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(example_interfaces REQUIRED)
+find_package(ament_cmake_auto REQUIRED)
+
+
+add_executable(bno055 src/bno055.cpp src/i2c.cpp src/sensorService.cpp)
 target_include_directories(bno055 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_compile_features(bno055 PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(bno055 PUBLIC c_std_99 cxx_std_17)
+ament_target_dependencies(bno055 rclcpp sensor_msgs geometry_msgs std_msgs example_interfaces)
+
 
 install(TARGETS bno055
   DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME})
+
+install(DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch)
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

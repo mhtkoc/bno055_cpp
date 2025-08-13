@@ -1,11 +1,16 @@
+
 #pragma once
 
 #include <cstdint>
 #include <vector>
 #include <stdexcept>
 #include <memory>
+#include <string>
+#include <linux/i2c-dev.h>   // Linux I2C/SMBus definitions
+#include <sys/ioctl.h>       // ioctl for I2C
+#include <fcntl.h>           // open
+#include <unistd.h>          // close, read, write
 
-// Forward declaration for ROS2 node if needed
 namespace rclcpp {
     class Node;
 }
@@ -22,7 +27,6 @@ public:
     explicit Connector(std::shared_ptr<rclcpp::Node> node) : node_(node) {}
     virtual ~Connector() = default;
 
-    // Not protocol-specific
     virtual std::vector<uint8_t> receive(uint8_t reg_addr, size_t length) {
         return read(reg_addr, length);
     }
@@ -41,10 +45,12 @@ class I2C : public Connector {
 public:
     static constexpr const char* CONNECTIONTYPE_I2C = "i2c";
 
-    I2C(std::shared_ptr<rclcpp::Node> node, int i2c_bus = 0, uint8_t i2c_addr = 0x28);
+    I2C(std::shared_ptr<rclcpp::Node> node, int i2c_bus = 1, uint8_t i2c_addr = 0x29);
     virtual ~I2C();
 
     void connect();
+    void read();
+    void write();
 
 protected:
     std::vector<uint8_t> read(uint8_t reg_addr, size_t length) override;
@@ -54,5 +60,4 @@ private:
     int bus_fd_;
     uint8_t address_;
     int i2c_bus_;
-    // Helper for opening/closing bus, etc.
 };
