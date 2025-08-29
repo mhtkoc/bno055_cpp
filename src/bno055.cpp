@@ -22,7 +22,7 @@ public:
 		declare_parameter<std::string>("placement_axis_remap", "P0");
 		declare_parameter<bool>("set_offsets", false);
 		declare_parameter<uint8_t>("operation_mode", 0x0C);
-		declare_parameter<std::string>("frame_id", "bno055");
+		declare_parameter<std::string>("frame_id", "imu");
 		declare_parameter<std::vector<double>>("variance_orientation", {0.0159, 0.0159, 0.0159});
 		declare_parameter<std::vector<double>>("variance_acc", {0.017, 0.017, 0.017});
 		declare_parameter<std::vector<double>>("variance_angular_vel", {0.04, 0.04, 0.04});
